@@ -23,7 +23,6 @@ export const getCommunities = async(req,res)=>{
     }
 }
 
-
 export const createCommunity = async(req,res)=>{
     const userId = req.userId
     const {name,description} = req.body
@@ -51,7 +50,8 @@ export const createCommunity = async(req,res)=>{
             } 
         })
         return res.status(200).json({
-            msg : "Community Created",community : newCommunity
+            msg : "Community Created",
+            community : newCommunity
         })
     }catch(err){
         console.log(err)
@@ -95,49 +95,66 @@ export const updateBanner = async(req,res)=>{
     }
 }
 
-
 export const getCommunityById = async(req,res)=>{
     const {communityId} = req.params
     try{
         const community = await Community.findById(communityId)
         if(!community){
-            return res.status(404).json({msg : "Community not found"})
+            return res.status(404).json({
+                msg : "Community not found"
+            })
         }
-        return res.status(200).json({community : community})
+        return res.status(200).json({
+            community : community
+        })
     }catch(err){
         console.log(err)
-        return res.status(500).json({msg : "Internal Server Error"})
+        return res.status(500).json({
+            msg : "Internal Server Error"
+        })
     }   
 }
-
 
 export const getcommunityPosts = async(req,res)=>{
     const {communityId} = req.params
     try{
         const community = await Community.findById(communityId)
         if(!community){
-            return res.status(404).json({msg : "Community not found"})
+            return res.status(404).json({
+                msg : "Community not found"
+            })
         }
-        const posts = await Post.find({community : communityId})
-        return res.status(200).json({posts : posts})
+        const posts = await Post.find({
+            community : communityId
+        })
+        return res.status(200).json({
+            posts : posts
+        })
     }catch(err){
         console.log(err)
-        return res.status(500).json({msg : "Internal Server Error"})
+        return res.status(500).json({
+            msg : "Internal Server Error"
+        })
     }
 }
-
 
 export const deleteCommunity = async(req,res)=>{
     const {communityId} = req.params       
     try{
         const community = await Community.findByIdAndDelete(communityId)
         if(!community){
-            return res.status(404).json({msg : "Community not found"})
+            return res.status(404).json({
+                msg : "Community not found"
+            })
         }   
-        return res.status(200).json({msg : "Community Deleted"})
+        return res.status(200).json({
+            msg : "Community Deleted"
+        })
     }catch(err){
         console.log(err)
-        return res.status(500).json({msg : "Internal Server Error"})
+        return res.status(500).json({
+            msg : "Internal Server Error"
+        })
     }   
 }
 
@@ -146,17 +163,24 @@ export const addModerator = async(req,res)=>{
     const {communityId} = req.params
     const {moderatorId} = req.params
     try{
-        let community = await Community.findOne({_id :communityId, admin : adminId})
+        let community = await Community.findOne({
+            _id :communityId, admin : adminId
+        })
         let moderator = await  User.findById(moderatorId)
-        console.log("Community",community,"\n moderator",moderator)
         if( !moderator || !community){
-            return res.status(404).json({msg : "Dosen't Exist"})
+            return res.status(404).json({
+                msg : "Dosen't Exist"
+            })
         }
         community.moderators.push(moderatorId)
         await community.save()
-        return res.status(200).json({msg : "Moderator Added"})
+        return res.status(200).json({
+            msg : "Moderator Added"
+        })
     }catch(err){
         console.log(err)
-        return res.status(500).json({msg : "Internal Server Error"})
+        return res.status(500).json({
+            msg : "Internal Server Error"
+        })
     }
 }

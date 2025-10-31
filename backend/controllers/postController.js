@@ -99,7 +99,9 @@ export const getAllPosts = async(req,res)=>{
 export const getYourPosts = async(req,res)=>{
     const userId = req.userId
     try{
-        let posts = await Post.find({ author : userId})
+        let posts = await Post.find({
+             author : userId
+            })
         return res.status(200).json({
             posts
         })      
