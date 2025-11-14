@@ -1,12 +1,8 @@
 import { atom } from "recoil";
 
-export const postModalAtom = atom({
-    key : "postModalAtom",
-    default : false
+export const createModalAtom = atom({
+    key : "createModalAtom",
+    default : null
 })
 
-export const communityModalAtom = atom({
-    key : "communityModalAtom",
-    default : true
-})
 

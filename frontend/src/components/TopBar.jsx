@@ -1,12 +1,13 @@
-import { postModalAtom } from "@/store/atoms/Modal"
-import { BellIcon, CirclePlus, CircleUser, MessageCircle, MessageCircleCodeIcon, MessageCircleDashed, MessageCircleMore, SearchIcon } from "lucide-react"
+import { createModalAtom} from "@/store/atoms/Modal"
+import { BellIcon, CirclePlus, CircleUser,MessageCircleMore, PlusIcon, SearchIcon } from "lucide-react"
 import { useSetRecoilState } from "recoil"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 
 const TopBar = () => {
-  const setPostModal = useSetRecoilState(postModalAtom)
+  const setModal = useSetRecoilState(createModalAtom)
   return (
     <>
-      <header className="border-0 border-b border-sky-700 px-md ">
+      <header className="border-0 border-b border-neutral-700 px-md ">
         <div className="h-15 flex itmes-center px-3">
           <div className="flex items-center justify-start">
              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="35" height="35" viewBox="0 0 48 48">
@@ -22,19 +23,20 @@ const TopBar = () => {
                     </div>
               </div>      
           </div>
-          <div className="flex items-center gap-2 ">
+          <div className="flex items-center gap-3 ">
+             <div className="bg-sky-700 text-white text-lg font-medium flex items-center gap-1 px-3 py-1 rounded-full cursor-pointer hover:bg-sky-600" onClick={()=>setModal("createPost")}>
+                   Create<PlusIcon size={22} color="white" className="mt-1"/>
+             </div>
              <div className="bg-neutral-600 flex items-center p-1.5 rounded-full cursor-pointer">
                  <MessageCircleMore size={22} color="white" />
-             </div>
-             <div className="bg-sky-700 text-white text-lg font-medium flex items-center gap-1 px-3 py-1 rounded-full cursor-pointer hover:bg-sky-600" onClick={()=>setPostModal(true)}>
-                   Create<CirclePlus size={22} color="white"/>
              </div>
              <div className="bg-neutral-600 flex items-center p-1.5 rounded-full cursor-pointer">
                  <BellIcon size={22} color="white" />
              </div>
-             <div className="bg-neutral-600 flex items-center p-1.5 rounded-full cursor-pointer">
-                 <CircleUser size={22} color="white"/>
-             </div>
+             <Avatar className='w-8 h-8'>
+               <AvatarImage/>
+               <AvatarFallback>Profile(0)</AvatarFallback>
+             </Avatar>
           </div>
         </div>
 
