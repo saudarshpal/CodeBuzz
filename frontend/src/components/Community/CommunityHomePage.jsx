@@ -5,6 +5,7 @@ import CommuntiyDetails from "./CommuntiyDetails"
 import Post from "../Post/Post"
 import { useParams } from "react-router-dom"
 import axios from "axios"
+import { useEffect, useState } from "react"
 
 
 const CommunityHomePage = () => {

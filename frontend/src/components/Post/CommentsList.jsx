@@ -4,10 +4,10 @@ import { ArrowBigDown, ArrowBigUp} from "lucide-react";
 
 
 const CommentsList = ({comments}) => {
-  
+  const totalcomments = comments.length
   return (
     <div className="max-h-80 overflow-y-auto space-y-4 pr-2">
-          {comments.map((c, index) => (<motion.div key={index}
+          {totalcomments>0 ? comments.map((c, index) => (<motion.div key={index}
                                                    initial={{ opacity: 0,y:8}}
                                                    animate={{ opacity: 1, y:0 }}
                                                    className="flex gap-3 "
@@ -29,7 +29,7 @@ const CommentsList = ({comments}) => {
               </div>
               
             </motion.div>
-          ))}
+          )) : <div className="text-neutral-600"> No comments posted </div>}
         </div>
   )
 }

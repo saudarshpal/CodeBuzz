@@ -1,9 +1,10 @@
 import TopBar from "@/components/TopBar"
 import SideBar from "@/components/SideBar"
 import CommunityBar from "@/components/Home/CommunityBar"
-import Middle from "@/components/Home/Middle"
+import Middle from "@/components/Home/Feed"
 
 const HomePage = () => { 
+   console.log(import.meta.env.VITE_API_BASE_URL)
    return (
     <div className='bg-neutral-900 h-full w-screen'>
        <TopBar></TopBar>

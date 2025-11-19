@@ -10,9 +10,20 @@ import { useState } from "react";
 
 const CreatePost=()=> {
   const [modal,setModal] = useRecoilState(createModalAtom)
-  const [title,setTitle] = useState('')
-  const [content,setContent] = useState('')
-
+  const [posts,setPosts] = useState({
+    title : "",
+    content : "",
+    community : "",
+  })
+  const [community,setCommunities] = useState([])
+  const [selectedCommunity, setSelectedCommmunity] = useState('')
+  const getUserCommunities = async()=>{
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/user/all`)
+        setCommunities(response.data.userCommunities)
+  }
+  useEffect(()=>{
+    getUserCommunities() 
+  },[])
   return (
     <>
       {modal==="createPost" && (

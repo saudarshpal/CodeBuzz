@@ -2,24 +2,27 @@
   import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
   import {  useSetRecoilState } from "recoil"
   import { createModalAtom } from "@/store/atoms/Modal"
-  import { postIdAtom } from "@/store/atoms/Post"
-  import { useEffect, useState } from "react"
+  import { useState } from "react"
   import {TbArrowBigUp,TbArrowBigUpFilled} from 'react-icons/tb'
   import { TbArrowBigDown, TbArrowBigDownFilled,} from "react-icons/tb"
+  import { useNavigate } from "react-router-dom"
   
 
 
   const Post=({post})=>{
-    const setModal = useSetRecoilState(createModalAtom)
+    const userId = post.author
+    const communityId = post.community
     const commentCount = post.comments.length
     const upvotes  = post.votes.upvotes
     const downvotes = post.votes.downvotes 
-    const [buttoncolor,setButtonColor] = useState('bg-neutral-600')
+    const setModal = useSetRecoilState(createModalAtom)
+    const [vote,setVote] = useState('unvote') 
     const [upVoteCount,setUpVoteCount] = useState(upvotes)
     const [downVoteCount,setDownVoteCount] = useState(downvotes)
-    const [vote,setVote] = useState('unvote') 
+    const [buttoncolor,setButtonColor] = useState('bg-neutral-600')
     const [downVoteClick, setDownVoteClick] = useState(false)
     const [upVoteClick, setUpVoteClick] = useState(false)
+    const navigate = useNavigate()
     const handleUpVote = ()=>{
       if(vote==="unvote"){
         setVote("upvote")
@@ -72,13 +75,13 @@
       <div className="border-solid border-y border-neutral-800 p-1">
           <div className="flex flex-col gap-1 hover:bg-neutral-800 rounded-lg px-4 py-1">
               <div className="flex itmes-center justify-start gap-2">
-                  <Avatar className='w-8 h-8'>
+                  <Avatar className='w-8 h-8 cursor-pointer' onClick={()=>navigate(`/user/${userId}`)}>
                     <AvatarImage />
-                    <AvatarFallback>User</AvatarFallback>
+                    <AvatarFallback>{post.author.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-wrap gap-1 items-center justify-start ">
                     <span className="text-neutral-500 text-sm font-semibold pt-1">{post.username}</span>
-                    <span className="text-neutral-500 text-sm font-semibold pt-1">({post.community})</span>
+                    {post.community && <span onClick={()=>navigate(`/community/${communityId}`)} className="text-neutral-500 text-sm font-semibold pt-1 hover:text-neutral-300 cursor-pointer">[{post.community}]</span>}
                   </div>  
               </div>
               <h2 className="text-xl font-semibold text-white">{post.title}</h2>
@@ -89,7 +92,7 @@
                     : <TbArrowBigUp size={18} color="white" onClick={handleUpVote} className={`rounded-full cursor-pointer`}/>}
                       {upVoteCount}
                     {downVoteClick ? <TbArrowBigDownFilled size={18} color="white" onClick={handleDownVote} className={`rounded-full cursor-pointer`}/>
-                    :<TbArrowBigDown size={18} color="white" onClick={handleDownVote} className={`rounded-full cursor-pointer`} />}
+                    : <TbArrowBigDown size={18} color="white" onClick={handleDownVote} className={`rounded-full cursor-pointer`} />}
                       {downVoteCount}
                   </div>
                   <div onClick={()=>{setModal("postComment")}} className="bg-white/20 text-white text-sm rounded-full flex flex-row items-center gap-1 px-2 cursor-pointer">
@@ -102,3 +105,4 @@
     )
   }
   export default Post
+  

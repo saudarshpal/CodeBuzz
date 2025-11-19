@@ -22,6 +22,33 @@ export const getCommunities = async(req,res)=>{
         })
     }
 }
+export const userCommunities = async(req,res)=>{
+    const {userId}  = req.body
+    try{
+        let user = await User.findById(userId)
+        if(!user){
+            return res.status(404).json({
+                msg: "User not found"
+            })
+        }
+        let communities = await Community.find({
+            admin : userId
+        })
+        if(!communities){
+            return res.status(404).json({
+                msg : "No Communities found"
+            })
+        }
+        return res.status(200).json({
+            userCommunities : communities
+        })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg :"Internal server error"
+        })
+    }
+}
 
 export const createCommunity = async(req,res)=>{
     const userId = req.userId

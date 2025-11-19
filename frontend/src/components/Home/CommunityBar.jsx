@@ -21,7 +21,7 @@ const CommunityBar = () => {
             </div>
             <div className="w-full flex flex-col gap-2">
               {
-                communities.map((c,index)=> <CommunityProfileCard key={index} community={c} />)
+                // communities.map((c,index)=> <CommunityProfileCard key={index} community={c} />)
               }
             </div>
             
