@@ -23,7 +23,7 @@ export const getCommunities = async(req,res)=>{
     }
 }
 export const userCommunities = async(req,res)=>{
-    const userId  = req.userId
+    const {userId}  = req.params
     try{
         let user = await User.findById(userId)
         if(!user){
@@ -88,40 +88,6 @@ export const createCommunity = async(req,res)=>{
     }
 }
 
-export const updateBanner = async(req,res)=>{
-    const userId = req.userId
-    const {communityId} = req.params
-    let bannerUrl
-    try{
-        let community = await Community.findOne({
-            _id : communityId,
-            admin : userId
-        })
-        if(!community){
-            return res.status(404).json({
-                msg : "Community not found"
-            })
-        }   
-        if(req.file){
-            const result = await cloudinary.uploader.upload(req.file.path)
-            bannerUrl = result.secure_url
-            community.banner = {        
-                exists : bannerUrl ? true : false,
-                url : bannerUrl
-            }
-            await community.save()
-            return res.status(200).json({
-                msg : "Banner Updated",
-            })
-        }
-    }catch(err){
-        console.log(err)
-        return res.status(500).json({
-            msg : "Internal Server Error"
-        })
-    }
-}
-
 export const getCommunityById = async(req,res)=>{
     const {communityId} = req.params
     try{
@@ -177,6 +143,7 @@ export const followCommunity = async(req,res) =>{
             msg  : "Already Following"
         })
         community.subscribers.push(userId)
+        community.count.subscribers += 1 
         await community.save()
         return res.status(200).json({
             msg : "Followed Community"
@@ -201,6 +168,7 @@ export const unFollowCommunity = async(req,res) =>{
             msg  : "Not Following"
         })
         community.subscribers.filter(id=> id.toString() !== userId )
+        community.count.subscribers -= 1
         await community.save()
         return res.status(200).json({
             msg : "UnFollowed Community"

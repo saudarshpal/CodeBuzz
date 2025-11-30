@@ -13,17 +13,21 @@ import { useCallback } from "react"
 import useThrottle from "@/hooks/useThrottle"
 import axios from "axios"
 
+
   
 
 
 const Post=({post})=>{
+  console.log(post)
   const setModal = useSetRecoilState(createModalAtom)
   const setPostId = useSetRecoilState(postIdAtom)
   const [user,setUser] = useState({})
   const [community,setCommunity] = useState({})
   const postId = post._id
-  const authorId = post.author
+  const userId = post.author
+  console.log(userId)
   const communityId = post.community
+  console.log(community)
   const commentCount = post.comments.length
   const upvotes  = post.votes.upvotes
   const downvotes = post.votes.downvotes 
@@ -45,7 +49,7 @@ const Post=({post})=>{
       setButtonColor('bg-red-500')
       throttledVoteRequest('upvote')
     }
-    if(vote==="downvote"){
+    else if(vote==="downvote"){
       setVote("upvote")
       setUpVoteCount(upVoteCount+1)
       setDownVoteCount(downVoteCount-1)
@@ -54,7 +58,7 @@ const Post=({post})=>{
       setButtonColor('bg-red-500')
       throttledVoteRequest('upvote')
     }
-    if(upVoteClick===true){
+    else if(upVoteClick===true){
       setVote("unvote")
       setUpVoteCount(upVoteCount-1)
       setUpVoteClick(false)
@@ -72,7 +76,7 @@ const Post=({post})=>{
       setButtonColor('bg-violet-500')
       throttledVoteRequest('downvote')
     }
-    if(vote==="upvote"){
+    else if(vote==="upvote"){
       setVote("downvote")
       setDownVoteCount(downVoteCount+1)
       setUpVoteCount(upVoteCount-1)
@@ -81,7 +85,7 @@ const Post=({post})=>{
       setButtonColor('bg-violet-500')
       throttledVoteRequest('downvote')
     }
-    if(downVoteClick===true){
+    else if(downVoteClick===true){
       setVote("unvote")
       setDownVoteCount(downVoteCount-1)
       setDownVoteClick(false)
@@ -91,7 +95,7 @@ const Post=({post})=>{
     }   
   } 
   const getUser = async()=>{
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/${authorId}`,{
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/${userId}`,{
       headers : {
         'Authorization' : authHeader
       }
@@ -119,12 +123,12 @@ const Post=({post})=>{
     if(post?._id) setPostId(post._id)
     getUser()
     getCommunity()
-  },[postId])
+  },[post])
   return (
     <div className="border-solid border-y border-neutral-800 p-1">
         <div className="flex flex-col gap-1 hover:bg-neutral-800 rounded-lg px-4 py-1 ">
             <div className="flex itmes-center justify-start  pt-2 gap-1">
-                <Avatar className='w-8 h-8 cursor-pointer' onClick={()=>navigate(`/user/${authorId}`)}>
+                <Avatar className='w-8 h-8 cursor-pointer' onClick={()=>navigate(`/user/${userId}`)}>
                   <AvatarImage src={user?.profile?.avatar?.url}/>
                   <AvatarFallback>{user?.username?.charAt(0)}</AvatarFallback>
                 </Avatar>

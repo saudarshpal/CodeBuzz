@@ -1,15 +1,15 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import Banner from '@/assets/Banner.jpg'
 import Post from "../Post/Post"
 import UserDetails from "./UserDetails"
 import axios from "axios"
-import { useState } from "react"
-import { useEffect } from "react"
+import { useState,useEffect,useCallback} from "react"
+import {useParams} from "react-router-dom"
 import useThrottle from "@/hooks/useThrottle"
-import { useCallback } from "react"
 
 
-const UserProfilePage = ({userId}) => {
+
+const UserProfilePage = () => {
+  const {userId} = useParams()
   const [user,setUser] = useState({})
   const [userPosts,setUserPosts] = useState([])
   const [userCommunities,setUserCommunities] = useState([])
@@ -25,7 +25,7 @@ const UserProfilePage = ({userId}) => {
         setUser(response.data.user)
     }
   const getUserPosts = async()=>{
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/post/user/own`,{
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/post/user/${userId}`,{
         headers : {
             'Authorization' : authHeader
         }
@@ -33,7 +33,7 @@ const UserProfilePage = ({userId}) => {
         setUserPosts(response.data.posts)
     }
   const getUserCommunities = async()=>{
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/user/all`,{
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/user/${userId}`,{
         headers : {
             'Authorization' : authHeader
         }
@@ -62,8 +62,8 @@ const UserProfilePage = ({userId}) => {
             <div className="flex justify-between mt-[-30px] pl-10">
                 <div className="flex flex-row items-end gap-2">
                     <Avatar className="h-20 w-20">
-                        <AvatarImage src={user?.profile?.avatar?.url}/>
-                        <AvatarFallback>{user?.username?.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={user.profile?.avatar?.url}/>
+                        <AvatarFallback>{user.username?.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <h1 className="text-white text-4xl font-semibold">{user?.username}</h1>
                 </div>
@@ -80,7 +80,7 @@ const UserProfilePage = ({userId}) => {
             <div className="w-2/3 p-2">
                 {userPosts.map((post,index)=><Post key={index} post={post}/>)}
             </div>
-            <div className="w-1/3">
+            <div className="w-1/3 mt-2">
                 <UserDetails user={user} totalposts={totalposts} userCommunities={userCommunities}/>    
             </div>
         </div>

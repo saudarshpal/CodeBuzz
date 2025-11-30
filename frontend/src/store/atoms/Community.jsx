@@ -1,9 +1,11 @@
 import {atom} from 'recoil'
+import { recoilPersist } from 'recoil-persist'
+const {persistAtom} = recoilPersist()
 
 const communityAtom = atom({
     key : "communityAtom",
     default :  [],
-    // effects_UNSTABLE : [persistAtom]
+    effects_UNSTABLE : [persistAtom]
 })
 
 

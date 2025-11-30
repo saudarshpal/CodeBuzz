@@ -33,18 +33,10 @@ const userSchema = new mongoose.Schema({
         }
     ],
     profile : {
-        displayName:{
-        type : String,
-        minLength : 3,
-        },
         gender : {
            type : String,
            default : null,
-           enum : ['Male',"Female","Others"]
-        },
-        description :{
-            type : String,
-            maxLength : 150,
+           enum : ['Male',"Female"]
         },
         avatar : {
             exists : {

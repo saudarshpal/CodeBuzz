@@ -1,15 +1,10 @@
 import TopBar from "@/components/TopBar"
 import SideBar from "@/components/SideBar"
-import UserProfilePage from "@/components/User/UserProfilePage"
-import { useParams } from "react-router-dom"
+import AccountDetails from "@/components/AccountDetails"
 
 
 
-
-
-
-const ProfilePage = () => {
-  const {userId} = useParams()
+const UserAccount = () => {
   return ( 
     <div className='bg-neutral-900 h-full'>
        <TopBar/>
@@ -18,7 +13,7 @@ const ProfilePage = () => {
              <SideBar/>
           </div>
           <div className='w-12/15 px-4 py-2'>
-               <UserProfilePage userId={userId}/>
+               <AccountDetails />
           </div>
           
 
@@ -26,4 +21,4 @@ const ProfilePage = () => {
     </div>
   )
 }
-export default ProfilePage
+export default UserAccount

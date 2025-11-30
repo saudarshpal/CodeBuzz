@@ -31,9 +31,7 @@ const CreatePost=()=> {
     setCommunities(response.data.userCommunities)
   }
   const handleSelectCommunity = (value) =>{
-    if(value) {
       setPost({...post,community : value})
-    }
   }
 
   const handleUploadImages=(e)=>{

@@ -11,7 +11,7 @@ import usePosts from '@/hooks/usePosts'
 const Feed = () => {
   const modal = useRecoilValue(createModalAtom)
   let posts = useRecoilValue(postAtom) 
-  posts = usePosts() // fetching all the posts
+  posts = usePosts()
   return (
     <>
        {modal=== "createPost" ? (<CreatePost />) :

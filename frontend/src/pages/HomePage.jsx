@@ -2,9 +2,14 @@ import TopBar from "@/components/TopBar"
 import SideBar from "@/components/SideBar"
 import CommunityBar from "@/components/Home/CommunityBar"
 import Feed from "@/components/Home/Feed"
+import { useSetRecoilState } from "recoil"
+import { userAtom } from "@/store/atoms/User"
+
 
 const HomePage = () => { 
-
+   const userId = localStorage.getItem('userId')
+   const setUserId = useSetRecoilState(userAtom)
+   setUserId(userId)
    return (
     <div className='bg-neutral-900 h-full w-screen'>
        <TopBar></TopBar>
@@ -16,7 +21,6 @@ const HomePage = () => {
              <Feed />
           </div>
           <div className='border-l border-neutral-700 px-5 py-2 w-4/15'>
-             {/* displaying all the communities */}
              <CommunityBar /> 
           </div> 
        </div>

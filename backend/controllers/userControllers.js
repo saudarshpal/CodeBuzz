@@ -39,7 +39,9 @@ export const Verify = async(req,res)=>{
 
 export const Signup = async(req,res)=>{
     const{username,email,password} = req.body
+    console.log(username,email,password)
     const {success} = signupValid.safeParse(req.body) 
+    console.log(success)
     if(!success){
         return res.status(400).json({
             message: "enter valid inputs"
@@ -52,16 +54,6 @@ export const Signup = async(req,res)=>{
                 message : "Email  already exists"
             })
         }
-        const salt = await  bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(password,salt)
-        user = await User.create({
-            username,
-            email,
-            password:hashPassword
-        })
-        const verificationToken = uuidv4()
-        user.verificationToken = verificationToken
-        await user.save()
         const mailOptions = {
             from : process.env.EMAIL_USER,
             to : user.email,
@@ -72,10 +64,22 @@ export const Signup = async(req,res)=>{
                   <a href="http://localhost:3000/api/v1/user/verify/${verificationToken}">HiveTalk.com</a>`   
         }
         await transporter.sendMail(mailOptions)
+        const salt = await  bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(password,salt)
+        user = await User.create({
+            username,
+            email,
+            password:hashPassword
+        })
+        const verificationToken = uuidv4()
+        user.verificationToken = verificationToken
+        await user.save()
         const userId = user._id
         const token = jwt.sign({userId},JWT_TOKEN,{expiresIn:'1h'})
         return res.status(200).json({
-            message : "user created ",token : token
+            message : "user created ",
+            userId,
+            token : token
         })
     }catch(err){
         console.log(err)
@@ -110,6 +114,7 @@ export const Signin = async(req,res)=>{
         const token = jwt.sign({userId},JWT_TOKEN,{expiresIn:'1h'})
         return res.status(200).json({
             message : "Signin Successful",
+             userId,
              token : token
             })   
     }catch(err){
@@ -160,8 +165,8 @@ export const getUsers = async(req,res)=>{
 }
 
 export const createProfile = async(req,res)=>{
-    const {displayName,description} = req.body
     const userId = req.userId
+    const {gender} = req.body
     let avatarUrl,userBannerUrl
     try {
         let user = await User.findById(userId)
@@ -179,7 +184,7 @@ export const createProfile = async(req,res)=>{
             userBannerUrl = result.secure_url
         }
         user.profile = {
-            displayName,description,
+            gender,
             avatar : { 
                 exists : avatarUrl ? true : false,
                 url  : avatarUrl
@@ -328,6 +333,27 @@ export const getCommunities = async(req,res)=>{
             subscribers : userId
         })
         return res.status(200).json({communities})
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg : "Internal Server Error"
+        })
+    }
+}
+
+export const deleteAccount = async(req,res)=>{
+    const userId = req.userId
+    try{
+        let user = await User.findById(userId)
+        if(!user){
+            return res.status(402).json({
+                msg : "user not found"
+            })
+        }
+        await User.findByIdAndDelete(userId)
+        return res.status(200).json({
+            msg : "User Deleted"
+        })
     }catch(err){
         console.log(err)
         return res.status(500).json({

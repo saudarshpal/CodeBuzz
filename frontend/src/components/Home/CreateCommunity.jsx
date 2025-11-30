@@ -17,14 +17,15 @@ const CreateCommunity = () => {
     banner : null    
   })
   const authHeader = localStorage.getItem('authHeader')
-  const handleBanner = (e)=>{
-    const banner = e.target.value
-    setCommunity({...community,banner : banner})
-  }
   const handleCreate = async() =>{
-      const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/community/create`,community,{
+      const form = new FormData()
+      form.append("name",community.name)
+      form.append("description",community.description)
+      form.append("communityBanner",community.banner)
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/community/create`,form,{
             headers :{
-              'Authorization' : authHeader
+              'Authorization' : authHeader,
+              'Content-Type' : 'multipart/form-data'
             }
           })
       setModal(null)
@@ -49,14 +50,8 @@ const CreateCommunity = () => {
                 <Textarea value={community.description} onChange={(e)=>setCommunity({...community,description : e.target.value})}className="bg-neutral-800 border-gray-700 text-white placeholder-gray-500" rows={5} placeholder="Description of community.."/>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2 text-gray-300">
-                  Attach Images
-                </label>
-                <label className="flex items-center gap-2 px-4 py-2 bg-neutral-800 rounded-lg border border-gray-700 cursor-pointer hover:bg-neutral-700 transition">
-                  <Upload className="w-4 h-4 text-gray-300" />
-                  <span className="text-gray-300 text-sm">Upload Cover Image</span>
-                  <input type="file"  accept="image/*" onChange={(e)=>handleBanner(e)}className="hidden" />
-                </label>
+                <label className="block text-sm font-medium mb-2 text-gray-300">Attach Images</label>
+                <Input  onChange={(e)=>setCommunity({...community,banner : e.target.files[0]})} type="file" className="file:text-white bg-neutral-800 border-gray-700 text-neutral-500 placeholder-gray-500"/>
               </div>
               <div className="flex justify-end">
                 <Button onClick={handleCreate} className="bg-sky-700 hover:bg-sky-600 text-white px-6 py-2 rounded-xl transition cursor-pointer"> Create</Button>

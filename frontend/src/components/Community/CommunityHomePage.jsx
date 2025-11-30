@@ -18,6 +18,7 @@ const CommunityHomePage = () => {
   const isAdmin = community?.admin?.toString() === userId;
   const [communityPosts,setCommunityPosts] = useState([])
   const [follow,setFollow] = useState(false)
+  if(community?.subscribers?.includes(userId)) setFollow(true)
   const authHeader  = localStorage.getItem('authHeader')
 
   const getCommunity = async()=>{
@@ -28,8 +29,6 @@ const CommunityHomePage = () => {
     })
     setCommuntiy(response.data.community)
   }
-
-
   const getCommunityPosts =async()=>{
     const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/posts/${communityId}`,{
         headers : {
@@ -51,7 +50,7 @@ const CommunityHomePage = () => {
 
   const updateFollow = useCallback(async()=>{
     const flag = follow ? "unfollow" : "follow"
-    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/commnuity/${flag}/${communityId}`,{
+    await axios.post(`${import.meta.env.VITE_API_BASE_URL}/community/${flag}/${communityId}`,{
         headers : {
             'Authorization' : authHeader
         }
@@ -62,20 +61,14 @@ const CommunityHomePage = () => {
   useEffect(()=>{
     getCommunity()
     getCommunityPosts()
-  },[])
+  },[communityId])
 
   return (
     <div className="w-full">
         <img src={community.banner?.url} alt="" className="relative rounded-2xl w-full h-[50vh]"></img>
         <div className="relative">
-            <div className="flex justify-between mt-[-30px] pl-10">
-                <div className="flex flex-row items-end gap-2">
-                    <Avatar className="h-20 w-20">
-                        <AvatarImage />
-                        <AvatarFallback>{community.name?.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <h1 className="text-white text-4xl font-semibold">{community.name}</h1>
-                </div>
+            <div className="flex justify-between pl-10 px-2 pt-3">
+                <h1 className="text-white text-4xl font-bold">{community.name}</h1>
                 <div className="flex flex-row items-end gap-4">
                     <div onClick={()=>{setFollow(!follow)
                                        throttlesFollowUpdate()

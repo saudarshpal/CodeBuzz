@@ -114,12 +114,18 @@ export const getAllPosts = async(req,res)=>{
     }
 }
 
-export const getYourPosts = async(req,res)=>{
-    const userId = req.userId
+export const getUserPosts = async(req,res)=>{
+    const {userId} = req.params
     try{
-        let posts = await Post.find({
-             author : userId
+        let user = await User.findById(userId)
+        if(!user){
+            return res.status(402).json({
+                msg : "user not found"
             })
+        }
+        let posts = await Post.find({
+            author : userId
+        })
         return res.status(200).json({
             posts
         })      

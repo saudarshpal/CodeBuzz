@@ -1,5 +1,5 @@
 import express from "express";
-import { createProfile,followUser, getCommunities, getUserById, getUsers, Signin, Signup, subscribe, unfollowUser, unSubscribe,Verify } from "../controllers/userControllers.js";
+import { createProfile,deleteAccount,followUser, getCommunities, getUserById, getUsers, Signin, Signup, subscribe, unfollowUser, unSubscribe,Verify } from "../controllers/userControllers.js";
 import multer from "multer";
 import { authMiddleware } from "../middlewares/auth.js";
 
@@ -17,13 +17,13 @@ router.get('/verify/:verificationToken',Verify)
 router.post('/signin',Signin)
 router.get('/:userId',authMiddleware,getUserById)// get user by id
 router.get('/bulk',authMiddleware,getUsers)// get all users
-router.post('/settings/profile',authMiddleware,uploadMiddleware,createProfile)// create or update user profile
+router.post('/profile',authMiddleware,uploadMiddleware,createProfile)// create or update user profile
 router.post('/follow/:followUserId',authMiddleware,followUser) // follow user
 router.delete('/unfollow/:unfollowUserId',authMiddleware,unfollowUser) // unfollow user
 router.post('/subscribe/:communityId',authMiddleware,subscribe)// subscribe to community
 router.post('/unsubscribe/:communityId',authMiddleware,unSubscribe) // unsubscribe from community
 router.get('/community',authMiddleware,getCommunities) //get communities for specific user
-
+router.delete('/delete/own',deleteAccount)
 
 
 
